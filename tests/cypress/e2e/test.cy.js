@@ -1,74 +1,69 @@
-const getNavLinks = () => cy.get('[data-cy="nav-link"][data-nav-target]');
-const getSection = (id) => cy.get(`[data-section-id="${id}"]`);
-const getHeroCta = () => cy.get('[data-cy="hero-cta"][data-scroll-target]');
-const getLeadForm = () => cy.get('[data-cy="lead-form"]');
-const getLeadStatus = () => cy.get('[data-cy="form-status"]');
-const getSubmitButton = () => getLeadForm().find('button[type="submit"]');
-const toggleMobileNav = () => cy.get('[data-cy="mobile-nav-toggle"]');
-const primaryNav = () => cy.get('[data-cy="primary-nav"]');
+// Lab 1 — structural checks.
+// These are FEEDBACK, not a grade. This lab is HTML + CSS only: no JS, no
+// frameworks. So these tests check the structural things that are easy to
+// forget — they say nothing about whether your page looks good.
 
-describe('Landing page visitor journeys', () => {
+const STYLESHEET = '../style.css';
+
+describe('Lab 1 — landing page structure', () => {
   beforeEach(() => {
     cy.visit('index.html');
   });
 
-  it('lets visitors jump between sections using the global navigation', () => {
-    getNavLinks()
-      .should('have.length.at.least', 3)
-      .each(($link) => {
-        const target = $link.getAttribute('data-nav-target');
-        expect(target, 'nav link data-nav-target').to.match(/^[\w-]+$/);
-
-        cy.wrap($link).click();
-        cy.location('hash').should('eq', `#${target}`);
-        getSection(target).should('be.visible');
-      });
+  it('has the viewport meta tag, so media queries work on a real phone', () => {
+    cy.get('head meta[name="viewport"]')
+      .should('exist')
+      .should('have.attr', 'content')
+      .and('match', /width\s*=\s*device-width/);
   });
 
-  it('scrolls to the lead form when the hero call-to-action is pressed', () => {
-    getHeroCta().then(($cta) => {
-      const target = $cta.attr('data-scroll-target');
-      expect(target, 'hero CTA scroll target').to.match(/^[\w-]+$/);
+  it('links a stylesheet', () => {
+    cy.get('head link[rel="stylesheet"]').should('exist');
+  });
 
-      cy.wrap($cta).click();
-      cy.location('hash').should('eq', `#${target}`);
-      cy.window().its('scrollY').should('be.greaterThan', 0);
-      getSection(target)
-        .should('be.visible')
-        .within(() => {
-          cy.get('[data-cy="lead-form"]').should('exist');
-        });
+  it('uses semantic elements rather than divs for everything', () => {
+    cy.get('nav').should('exist');
+    cy.get('footer').should('exist');
+    cy.get('header, main, section, article').should('have.length.at.least', 1);
+  });
+
+  it('has a nav with at least three links', () => {
+    cy.get('nav a').should('have.length.at.least', 3);
+  });
+
+  it('has a call to action and a text input', () => {
+    cy.get('button, input[type="submit"], [class*="cta"], [class*="btn"], [class*="button"]')
+      .should('have.length.at.least', 1);
+    cy.get('input').should('have.length.at.least', 1);
+  });
+
+  it('shows at least one image, as an <img> or a CSS background', () => {
+    cy.window().then((win) => {
+      const imgs = win.document.querySelectorAll('img').length;
+      const backgrounds = [...win.document.querySelectorAll('body *')].filter(
+        (el) => win.getComputedStyle(el).backgroundImage !== 'none',
+      ).length;
+      expect(imgs + backgrounds, '<img> tags or CSS background images').to.be.greaterThan(0);
     });
   });
 
-  it('validates lead form submissions before showing a success message', () => {
-    getSubmitButton().click();
-    getLeadStatus().should('have.attr', 'data-status', 'error');
-
-    getLeadForm().within(() => {
-      cy.get('input[name="name"]').type('Visitor Van Fleet');
-      cy.get('input[type="email"]').type('visitor@example.com');
-      cy.get('textarea[name="message"]').type('Excited to learn more!');
+  it('lays things out with flexbox', () => {
+    cy.window().then((win) => {
+      const flexed = [...win.document.querySelectorAll('body *')].filter(
+        (el) => win.getComputedStyle(el).display === 'flex',
+      );
+      expect(flexed.length, 'elements with display: flex').to.be.greaterThan(0);
     });
-
-    getSubmitButton().click();
-    getLeadStatus().should('have.attr', 'data-status', 'success');
   });
 
-  it('provides a mobile navigation toggle that reflects its expanded state', () => {
-    cy.viewport('iphone-x');
-    cy.visit('index.html');
+  it('has no JavaScript — this one is HTML and CSS only', () => {
+    cy.get('script').should('have.length', 0);
+  });
 
-    toggleMobileNav()
-      .should('have.attr', 'aria-expanded', 'false');
-    primaryNav().should('have.attr', 'aria-hidden', 'true');
-
-    toggleMobileNav().click();
-    toggleMobileNav().should('have.attr', 'aria-expanded', 'true');
-    primaryNav().should('have.attr', 'aria-hidden', 'false');
-
-    toggleMobileNav().click();
-    toggleMobileNav().should('have.attr', 'aria-expanded', 'false');
-    primaryNav().should('have.attr', 'aria-hidden', 'true');
+  it('has a mobile breakpoint and some hover polish in the CSS', () => {
+    cy.readFile(STYLESHEET).then((css) => {
+      expect(css, 'a media query with a max-width').to.match(/@media[^{]*max-width/);
+      expect(css, 'at least one :hover rule').to.match(/:hover/);
+    });
   });
 });
