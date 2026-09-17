@@ -38,17 +38,22 @@ test.describe('the rendered page', () => {
   });
 
   test('has a call to action and a text input', async ({ page }) => {
-    const cta = page.locator(
-      'button, input[type="submit"], [class*="cta"], [class*="btn"], [class*="button"]',
+    // A call to action is usually a styled <a>, and we can't guess what you
+    // called its class — so: any button, or any link that isn't nav/footer chrome.
+    const ctas = await page.evaluate(
+      () =>
+        [...document.querySelectorAll('button, input[type="submit"], a')].filter(
+          (el) => !el.closest('nav, footer'),
+        ).length,
     );
-    expect(await cta.count()).toBeGreaterThan(0);
+    expect(ctas).toBeGreaterThan(0);
     expect(await page.locator('input').count()).toBeGreaterThan(0);
   });
 
   test('shows at least one image, as an <img> or a CSS background', async ({ page }) => {
     const found = await page.evaluate(() => {
       const imgs = document.querySelectorAll('img').length;
-      const backgrounds = [...document.querySelectorAll('body *')].filter(
+      const backgrounds = [...document.querySelectorAll('body, body *')].filter(
         (el) => getComputedStyle(el).backgroundImage !== 'none',
       ).length;
       return imgs + backgrounds;
@@ -59,7 +64,7 @@ test.describe('the rendered page', () => {
   test('lays things out with flexbox', async ({ page }) => {
     const flexed = await page.evaluate(
       () =>
-        [...document.querySelectorAll('body *')].filter(
+        [...document.querySelectorAll('body, body *')].filter(
           (el) => getComputedStyle(el).display === 'flex',
         ).length,
     );
@@ -69,14 +74,19 @@ test.describe('the rendered page', () => {
 
 test.describe('the source files', () => {
   test('has no JavaScript — this one is HTML and CSS only', async () => {
-    const html = await source('index.html');
+    const html = (await source('index.html')).replace(/<!--[\s\S]*?-->/g, '');
     expect(html).not.toMatch(/<script/i);
     expect(html).not.toMatch(/\son[a-z]+\s*=/i);
   });
 
   test('has a mobile breakpoint and some hover polish in the CSS', async () => {
-    const css = await source('style.css');
-    expect(css).toMatch(/@media[^{]*max-width/);
+    // Strip comments first — a TODO mentioning @media shouldn't count as one.
+    const css = (await source('style.css')).replace(/\/\*[\s\S]*?\*\//g, '');
+    // max-width is what the lab shows, but mobile-first (min-width) and the
+    // modern range syntax are just as correct.
+    expect(css, 'a width-based media query (the lab shows max-width)').toMatch(
+      /@media[^{]*(max-width|min-width|width\s*[<>=])/,
+    );
     expect(css).toMatch(/:hover/);
   });
 });
