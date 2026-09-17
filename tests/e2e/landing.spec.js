@@ -19,7 +19,7 @@ test.describe('the rendered page', () => {
   test('has the viewport meta tag, so media queries work on a real phone', async ({ page }) => {
     await expect(page.locator('head meta[name="viewport"]')).toHaveAttribute(
       'content',
-      /width\s*=\s*device-width/,
+      /\bwidth\s*=\s*device-width/i,
     );
   });
 
@@ -34,7 +34,7 @@ test.describe('the rendered page', () => {
   });
 
   test('has a nav with at least three links', async ({ page }) => {
-    expect(await page.locator('nav a').count()).toBeGreaterThanOrEqual(3);
+    expect(await page.locator('nav a:visible').count()).toBeGreaterThanOrEqual(3);
   });
 
   test('has a call to action and a text input', async ({ page }) => {
@@ -43,11 +43,13 @@ test.describe('the rendered page', () => {
     const ctas = await page.evaluate(
       () =>
         [...document.querySelectorAll('button, input[type="submit"], a')].filter(
-          (el) => !el.closest('nav, footer'),
+          (el) => !el.closest('nav, footer') && el.getClientRects().length > 0,
         ).length,
     );
     expect(ctas).toBeGreaterThan(0);
-    expect(await page.locator('input').count()).toBeGreaterThan(0);
+    expect(
+      await page.locator('input:not([type="hidden"]):visible').count(),
+    ).toBeGreaterThan(0);
   });
 
   test('shows at least one image, as an <img> or a CSS background', async ({ page }) => {
@@ -64,8 +66,8 @@ test.describe('the rendered page', () => {
   test('lays things out with flexbox', async ({ page }) => {
     const flexed = await page.evaluate(
       () =>
-        [...document.querySelectorAll('body, body *')].filter(
-          (el) => getComputedStyle(el).display === 'flex',
+        [...document.querySelectorAll('body, body *')].filter((el) =>
+          ['flex', 'inline-flex'].includes(getComputedStyle(el).display),
         ).length,
     );
     expect(flexed).toBeGreaterThan(0);
@@ -76,7 +78,10 @@ test.describe('the source files', () => {
   test('has no JavaScript — this one is HTML and CSS only', async () => {
     const html = (await source('index.html')).replace(/<!--[\s\S]*?-->/g, '');
     expect(html).not.toMatch(/<script/i);
-    expect(html).not.toMatch(/\son[a-z]+\s*=/i);
+    // Require a quote after the = so prose like "onboarding=easy" isn't mistaken
+    // for an event handler.
+    expect(html).not.toMatch(/\son[a-z]+\s*=\s*["']/i);
+    expect(html).not.toMatch(/href\s*=\s*["']\s*javascript:/i);
   });
 
   test('has a mobile breakpoint and some hover polish in the CSS', async () => {
@@ -85,8 +90,8 @@ test.describe('the source files', () => {
     // max-width is what the lab shows, but mobile-first (min-width) and the
     // modern range syntax are just as correct.
     expect(css, 'a width-based media query (the lab shows max-width)').toMatch(
-      /@media[^{]*(max-width|min-width|width\s*[<>=])/,
+      /@media[^{]*(max-width|min-width|width\s*[<>=])/i,
     );
-    expect(css).toMatch(/:hover/);
+    expect(css).toMatch(/:hover/i);
   });
 });
