@@ -57,7 +57,14 @@ describe('Lab 1 — landing page structure', () => {
   });
 
   it('has no JavaScript — this one is HTML and CSS only', () => {
-    cy.get('script').should('have.length', 0);
+    // Read the file, not the DOM: Cypress injects its own <script> into every
+    // page it serves, so counting script tags in the DOM always finds one.
+    cy.readFile('../index.html').then((html) => {
+      expect(html, 'no <script> tags in index.html').not.to.match(/<script/i);
+      expect(html, 'no inline event handlers (onclick=, onsubmit=, ...)').not.to.match(
+        /\son[a-z]+\s*=/i,
+      );
+    });
   });
 
   it('has a mobile breakpoint and some hover polish in the CSS', () => {
