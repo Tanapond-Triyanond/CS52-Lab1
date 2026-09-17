@@ -1,4 +1,5 @@
 node_modules
-cypress/downloads
-cypress/videos
-cypress/screenshots
+test-results
+playwright-report
+blob-report
+.last-run.json
