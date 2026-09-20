@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Pittahut</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <a class="logo">Pitta's Food Review</a>
+      
+      <!-- Hambuger tool for nav to collapse on mobile screen (AI help) -->
+      <input class="nav-checkbox" type="checkbox" id="nav-toggle">
+      <label class="burger" for="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
+      <ul class="nav-links">
+        <li><a href="#bangkok-eats">Bangkok Eats</a></li>
+        <li><a href="#bali-eats">Bali Eats</a></li>
+        <li><a href="#top-restaurants">Top Restaurants</a></li>
+        <li><a href="#photo-gallery">Photo Gallery</a></li>
+      </ul>
+    
+      <!-- search bar -->
+      <div class="nav-search">
+        <input class="search-input" type="search" id="search" placeholder="[placeholder]" aria-label="Search">
+        <button class="btn" type="button">[button]</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Hero section (big image banner with text on top)-->
+    <section class="hero">
+      <img class="hero-img" src="img/hero.jpg">
+      <div class="hero-overlay">
+        <h1>
+          [Pitta's]<br>
+          [Summer Food Review]
+        </h1>
+        <p>Scroll below to see my favorite restaurants, cuisines, reviews of resturants in Bangkok and Asia</p>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews">
+      <div class="section-intro" id="bangkok-eats">
+        <h2>
+          Bangkok <br>
+          Fine Dining and Street Food
+        </h2>
+        <p>From fine dining to street food restaurants, scroll below to see pictures of my favorite dishes in Bangkok</p>
+      </div>
+      
+      <!-- Pictures that have scroll bar sideways (use Claude to help with card-row format)-->
+      <ul class="card-row">
+        <li class="card">
+          <img src="img/place-1.jpg">
+          <h3>[heading 3]</h3>
+          <p class="meta">[short label]</p>
+        </li>
+        <li class="card">
+          <img src="img/place-2.jpg">
+          <h3>[heading 3]</h3>
+          <p class="meta">[short label]</p>
+        </li>
+        <li class="card">
+          <img src="img/place-3.jpg">
+          <h3>[heading 3]</h3>
+          <p class="meta">[short label]</p>
+        </li>
+        <li class="card">
+          <img src="img/place-4.jpg">
+          <h3>[heading 3]</h3>
+          <p class="meta">[short label]</p>
+        </li>
+        <li class="card">
+          <img src="img/place-5.jpg">
+          <h3>[heading 3]</h3>
+          <p class="meta">[short label]</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Feed shifts into dark theme now (there an image in the center, wih two smaller iamges below)-->
+    <section class="dark-theme">
+      <div class="section-intro" id="bali-eats">
+        <h2>Quick feature of Bali eats</h2>
+        <p>Here are some quick reviews of the best restuarants and dishes I had while vacationing in Bali</p>
+      </div>
+      
+      <ul class="feature-grid">
+        <li class="feature-card feature-card-wide">
+          <img src="img/feature-wide.jpg">
+          <h3>[heading 3]</h3>
+          <p>[paragraph]</p>
+        </li>
+        <li class="feature-card">
+          <img src="img/feature-1.jpg">
+          <h3>[heading 3]</h3>
+          <p>[paragraph]</p>
+        </li>
+        <li class="feature-card">
+          <img src="img/feature-2.jpg">
+          <h3>[heading 3]</h3>
+          <p>[paragraph]</p>
+        </li>
+      </ul>
+    </section>
+    
+    <!-- 3 cards side by side (dark theme)-->
+    <section class="top3 theme-dark" id="top-restaurants">
+      <h2>Top 3 Restaurants in Bangkok</h2>
+
+      <ul class="tier-list">
+        <li class="tier-card">
+          <img src="img/tier-2.jpg">
+          <h3>[heading 3]</h3>
+          <p>[paragraph]</p>
+        </li>
+        <li class="tier-card">
+          <img src="img/tier-1.jpg">
+          <h3>[heading 3]</h3>
+          <p>[paragraph]</p>
+        </li>
+        <li class="tier-card">
+          <img src="img/tier-3.jpg">
+          <h3>[heading 3]</h3>
+          <p>[paragraph]</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Feed shits back to light theme, Photo Gallery with uneven photo grid-->
+    <section class="gallery" id="photo-gallery">
+      <div class="section-intro">
+        <h2>
+          Photo Gallery
+        </h2>
+        <p>Enjoy a gallery of all of my food photos below</p>
+      </div>
+ 
+      <!-- Gallery using grad, the texts need to be overlay on the photos in CSS-->>
+      <ul class="gallery-grid">
+        <li class="gallery-card">
+          <img src="img/gallery-1.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+ 
+        <li class="gallery-card">
+          <img src="img/gallery-2.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+ 
+        <li class="gallery-card">
+          <img src="img/gallery-3.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+ 
+        <li class="gallery-card">
+          <img src="img/gallery-4.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+ 
+        <li class="gallery-card">
+          <img src="img/gallery-5.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+ 
+        <li class="gallery-card">
+          <img src="img/gallery-6.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+ 
+        <li class="gallery-card">
+          <img src="img/gallery-7.jpg">
+          <h3>[heading 3]</h3>
+          <p>[short label]</p>
+        </li>
+      </ul>
+    </section>
+  
+  </main>
+
+  <!-- Footer -->>
+  <footer>
+    <div class="footer-col">
+      <h2>Contact</h2>
+      <ul>
+        <li><a href="#">Email</a></li>
+        <li><a href="#">Phone</a></li>
+        <li><a href="#">LinkedIn</a></li>
+      </ul>
+    </div>
+ 
+    <div class="footer-col">
+      <a class="logo" href="#">Pitta's Food Review</a>
+      <p>Hope you Enjoyed!</p>
+    </div>
+  </footer>
+ 
+</body>
+</html>
