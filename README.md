@@ -3,7 +3,7 @@
 # CS52 Lab 1. 
 A landing page for a personal food review site, covering restaurants I ate at in Bangkok and Bali.
 
-Live Site: 
+Live Site: https://cs52-lab1.tanapond-triyanond-28.workers.dev/
 
 Inspired by whoop.com (https://www.whoop.com/us/en/?srsltid=AU7gw4Ucms37RZqeiG_M_Ie2tbN7IZ-IiV5P2Hq7RTZkDNSUSX_eC__Q_)
 
